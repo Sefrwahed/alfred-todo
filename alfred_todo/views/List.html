@@ -1,0 +1,7 @@
+<input type="text" id="new_item" value="" />
+<button class="aw-submit" data-input-id="new_item" id="submit_btn">Add Item</button>
+<ul id="items_list">
+  {% for item in list_items %}
+    <input type="checkbox" > {{ item }} <br>
+  {% endfor %}
+</ul>
