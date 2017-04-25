@@ -7,7 +7,6 @@ class AlfredTodo(ABaseModule):
     def __init__(self, *args, **kwargs):
         ABaseModule.__init__(self, *args, **kwargs)
         self.todo_list = []
-        TodoListItem.db_path(self.database_path)
 
     def callback(self):
         self.todo_list = TodoListItem.all()
