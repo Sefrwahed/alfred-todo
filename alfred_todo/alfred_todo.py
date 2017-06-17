@@ -1,7 +1,7 @@
 from alfred.modules.api.a_base_module import ABaseModule
-from alfred.modules.api.view_components import AChecklist, AForm, ATextField, ATextField, ADivider
+from alfred.modules.api.view_components import AForm, ATextField, ATextField, ADivider
 from .models.todo_list_item import TodoListItem
-
+from .views.checklist import Checklist
 
 class AlfredTodo(ABaseModule):
     def __init__(self, *args, **kwargs):
@@ -18,7 +18,7 @@ class AlfredTodo(ABaseModule):
             ATextField("new_item", "New Item"),
             id="new_item_form"
         ))
-        self.add_component(AChecklist(
+        self.add_component(Checklist(
             list(map(
                 lambda item: (item.text, bool(item.status), item.id),
                 self.todo_list
