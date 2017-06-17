@@ -1,5 +1,5 @@
 from alfred.modules.api.a_base_module import ABaseModule
-from alfred.modules.api.view_components import AForm, ATextField, ATextField, ADivider
+from alfred.modules.api.view_components import AForm, ATextField, ATextField, ADivider, AActionIcon, ACheckbox
 from .models.todo_list_item import TodoListItem
 from .views.checklist import Checklist
 
@@ -18,12 +18,15 @@ class AlfredTodo(ABaseModule):
             ATextField("new_item", "New Item"),
             id="new_item_form"
         ))
-        self.add_component(Checklist(
+
+        self.chklst = Checklist(
             list(map(
                 lambda item: (item.text, bool(item.status), item.id),
                 self.todo_list
             ))
-        ))
+        )
+
+        self.add_component(self.chklst)
 
     def on_new_item_form_submitted(self, form_data):
         item = TodoListItem()
@@ -35,21 +38,17 @@ class AlfredTodo(ABaseModule):
         item.status = 0
         item.save()
 
-        self.components = []
-        self.callback()
-        self.construct_view()
-        self.populate_view()
+        new_item = self.chklst.add_item(item)
+        self.append_to(self.chklst, new_item)
 
     def on_checkbox_click(self, attrs):
-        item = TodoListItem.find(int(attrs['data-id']))
+        item = TodoListItem.find(int(attrs['id']))
         item.status = 1 if item.status == 0 else 0
         item.save()
-
 
     def on_i_click(self, attrs):
         if attrs.get('data-action') == "delete":
             TodoListItem.find(int(attrs['data-id'])).delete()
-            self.components = []
-            self.callback()
-            self.construct_view()
-            self.populate_view()
+            element_to_remove = self.chklst.get_element_by_id("item_{}".format(attrs['data-id']))
+            self.remove_component(element_to_remove)
+            self.chklst.list_items.remove(element_to_remove)
