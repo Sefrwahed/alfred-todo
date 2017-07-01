@@ -42,7 +42,7 @@ class AlfredTodo(ABaseModule):
         self.append_to(self.chklst, new_item)
 
     def on_checkbox_click(self, attrs):
-        item = TodoListItem.find(int(attrs['id']))
+        item = TodoListItem.find(int(attrs['id'][5:]))  # trimming item_ from element id
         item.status = 1 if item.status == 0 else 0
         item.save()
 
